@@ -1,0 +1,218 @@
+// Variables
+$primary: #6e46e6;
+$secondary: #4a28af;
+$light: #e7e7ed;
+$gray: #717191;
+$light_gray: #f3f3f6;
+
+$radius_sm: 6px;
+$radius_md: 8px;
+
+// Reponsive sizes
+$desktop: 1024px;
+
+// Reset & Global Styles
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+input {
+  font-family: inherit;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Rubik', sans-serif;
+}
+
+body {
+  background: linear-gradient(to bottom, $secondary, $primary);
+  background-size: cover;
+}
+
+// Components
+.hero {
+  padding-block: 1.5rem;
+  min-height: 600px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 600px;
+  margin-inline: auto;
+  max-width: 100%;
+
+  @media screen and (min-width: $desktop) {
+    width: 1024px;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-inline: 2rem;
+  }
+}
+
+.hero-text {
+  color: white;
+  text-align: center;
+
+  @media screen and (min-width: $desktop) {
+    text-align: start;
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 1.5rem;
+
+    @media screen and (min-width: $desktop) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &__description {
+    @media screen and (min-width: $desktop) {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+.hero-app {
+  background-color: white;
+  width: 100%;
+
+  @media screen and (min-width: $desktop) {
+    border-radius: 8px;
+    width: fit-content;
+  }
+
+  &__tabs {
+    display: flex;
+    border-bottom: 1px solid $light;
+  }
+
+  &__tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-inline: 1rem;
+    padding-block: 1.5rem 0.2rem;
+    flex-grow: 1;
+    color: $gray;
+
+    &.selected {
+      color: $primary;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    padding: 2rem 2.5rem;
+  }
+
+  &__label {
+    border: 1px solid $primary;
+    border-radius: $radius_sm;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    height: 40px;
+    display: flex;
+    column-gap: 0.5rem;
+  }
+
+  &__label-currency {
+    color: $primary;
+    width: 150px;
+    background-color: $light_gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__currency-symbol {
+    align-self: center;
+  }
+
+  &__label-operation {
+    color: $gray;
+    text-align: end;
+    position: absolute;
+    right: 12px;
+    top: 6px;
+    font-size: small;
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    row-gap: 1rem;
+  }
+
+  &__input {
+    border: 1px solid $light;
+    border-radius: 4px;
+    text-align: right;
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    height: fit-content;
+    margin-top: auto;
+    padding-bottom: 2px;
+    padding-right: 12px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__submit {
+    background-color: $primary;
+    color: white;
+    padding: 1rem 0.5rem;
+    border-radius: $radius_sm;
+    font-size: 1.1rem;
+  }
+
+  &__change-type {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: $primary;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 100%;
+    font-size: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      opacity: 0.95;
+    }
+  }
+}
