@@ -13,3 +13,9 @@ npm run dev
 ```
 
 3. Visitar [http://localhost:5173](http://localhost:5173)
+
+# Ejecutar tests
+
+```bash
+npm run test
+```
