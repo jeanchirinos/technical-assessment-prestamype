@@ -1,78 +1,99 @@
 import { InputExchangeInput } from '@/components/InputExchangeInput'
 import { OutputExchangeInput } from '@/components/OutputExchangeInput'
+import { setExchangeType, setOutput, toggleExchangeType } from '@/context/exchange/exchangeSlice'
+import { setPurchasePrice, setSalePrice } from '@/context/rates/ratesSlice'
+import { AppDispatch, RootState } from '@/context/store'
 import { ExchangeType } from '@/enums'
 import { ExchangeIcon } from '@/icons'
 import { db } from '@/lib/firebaseConfig'
-import { fromSolesToDollars, fromDollarsToSoles } from '@/services/calculateExchange'
-import { doc, onSnapshot } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { fromDollarsToSoles, fromSolesToDollars } from '@/services/calculateExchange'
+import { doc } from 'firebase/firestore'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 export function Home() {
-  const [exchangeType, setExchangeType] = useState(ExchangeType.PURCHASE)
-  const [input, setInput] = useState(1000)
-  const [output, setOutput] = useState<number>()
-
-  const [purchasePrice, setPurchasePrice] = useState<number>()
-  const [salePrice, setSalePrice] = useState<number>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [isError, setIsError] = useState<boolean>()
-
-  function handleClickOnExchange() {
-    const newExchangeType =
-      exchangeType === ExchangeType.PURCHASE ? ExchangeType.SELL : ExchangeType.PURCHASE
-
-    setExchangeType(newExchangeType)
-  }
+  const { exchangeType, input, output } = useSelector((state: RootState) => state.exchange)
+  const { purchasePrice, salePrice, ratesIsLoading, ratesIsError } = useSelector(
+    (state: RootState) => state.rates
+  )
+  const dispatch = useDispatch<AppDispatch>()
 
   const docRef = doc(db, 'rates', 'TDmXIypgLKKfNggHHSnw')
 
   useEffect(() => {
-    const unsub = onSnapshot(
-      docRef,
-      doc => {
-        if (!doc.exists()) {
-          setIsError(true)
-          return
-        }
+    dispatch(setPurchasePrice(3.8))
+    dispatch(setSalePrice(3.9))
 
-        const { purchase_price: purchasePrice, sale_price: salePrice } = doc.data()
+    // const unsub = onSnapshot(
+    //   docRef,
+    //   doc => {
+    //     if (!doc.exists()) {
+    //       dispatch(setRatesIsError(true))
+    //       return
+    //     }
 
-        setPurchasePrice(purchasePrice)
-        setSalePrice(salePrice)
-        setIsLoading(false)
-        setIsError(false)
+    //     const { purchase_price: purchasePrice, sale_price: salePrice } = doc.data()
+
+    //     dispatch(setPurchasePrice(purchasePrice))
+    //     dispatch(setSalePrice(salePrice))
+    //     dispatch(setRatesIsLoading(false))
+    //     dispatch(setRatesIsError(false))
+    //   },
+    //   error => {
+    //     console.error(error)
+    //     dispatch(setRatesIsLoading(false))
+    //     dispatch(setRatesIsError(true))
+    //   }
+    // )
+
+    // return () => {
+    //   unsub()
+    // }
+  }, [docRef, dispatch])
+
+  useEffect(() => {
+    if (output) return
+
+    if (!purchasePrice || !salePrice) return
+
+    const newOutput = fromDollarsToSoles({
+      amount: {
+        type: 'input',
+        value: input,
       },
-      error => {
-        console.error(error)
-        setIsLoading(false)
-        setIsError(true)
-      }
-    )
+      purchasePrice,
+    })
 
-    return () => {
-      unsub()
-    }
-  }, [docRef])
+    dispatch(setOutput(newOutput))
+  }, [input, output, purchasePrice, salePrice, dispatch])
 
   useEffect(() => {
     if (!purchasePrice || !salePrice) return
 
     if (exchangeType === ExchangeType.PURCHASE) {
       const output = fromDollarsToSoles({
-        amount: input,
+        amount: {
+          type: 'input',
+          value: input,
+        },
         purchasePrice,
       })
 
-      setOutput(output)
+      dispatch(setOutput(output))
     } else {
       const output = fromSolesToDollars({
-        amount: input,
+        amount: {
+          type: 'input',
+          value: input,
+        },
         salePrice,
       })
 
-      setOutput(output)
+      dispatch(setOutput(output))
     }
-  }, [exchangeType, input, purchasePrice, salePrice])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exchangeType])
 
   return (
     <main className='hero'>
@@ -87,7 +108,10 @@ export function Home() {
 
       <section className='hero-app'>
         <div className='hero-app__tabs'>
-          <button className='hero-app__tab' onClick={() => setExchangeType(ExchangeType.PURCHASE)}>
+          <button
+            className='hero-app__tab'
+            onClick={() => dispatch(setExchangeType(ExchangeType.PURCHASE))}
+          >
             <div
               className={`hero-app__tab-content ${
                 exchangeType === ExchangeType.PURCHASE ? 'selected' : ''
@@ -99,7 +123,10 @@ export function Home() {
               </span>
             </div>
           </button>
-          <button className='hero-app__tab' onClick={() => setExchangeType(ExchangeType.SELL)}>
+          <button
+            className='hero-app__tab'
+            onClick={() => dispatch(setExchangeType(ExchangeType.SELL))}
+          >
             <div
               className={`hero-app__tab-content ${
                 exchangeType === ExchangeType.SELL ? 'selected' : ''
@@ -112,31 +139,24 @@ export function Home() {
         </div>
 
         <form className='hero-app__form'>
-          {isError ? (
+          {ratesIsError ? (
             <p>Servicio no disponible</p>
           ) : (
             <>
               <div className='hero-app__inputs'>
-                <InputExchangeInput exchangeType={exchangeType} input={input} setInput={setInput} />
-                <OutputExchangeInput
-                  exchangeType={exchangeType}
-                  output={output}
-                  setOutput={setOutput}
-                  setInput={setInput}
-                  purchasePrice={purchasePrice}
-                  salePrice={salePrice}
-                />
+                <InputExchangeInput />
+                <OutputExchangeInput />
                 <button
                   type='button'
                   className='hero-app__change-type'
-                  onClick={handleClickOnExchange}
+                  onClick={() => dispatch(toggleExchangeType())}
                   title='Cambiar moneda'
                 >
                   <ExchangeIcon />
                 </button>
               </div>
 
-              <button type='button' className='hero-app__submit' disabled={!isLoading}>
+              <button type='button' className='hero-app__submit' disabled={!ratesIsLoading}>
                 Iniciar operación
               </button>
             </>

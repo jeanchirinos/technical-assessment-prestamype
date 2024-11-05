@@ -1,44 +1,46 @@
+import { setInput, setOutput } from '@/context/exchange/exchangeSlice'
+import { AppDispatch, RootState } from '@/context/store'
 import { ExchangeType } from '@/enums'
-import { ExchangeInput } from './ExchangeInput'
-import { Dispatch, SetStateAction } from 'react'
 import { fromDollarsToSoles, fromSolesToDollars } from '@/services/calculateExchange'
+import { useDispatch, useSelector } from 'react-redux'
+import { ExchangeInput } from './ExchangeInput'
 
-type OutputExchangeInputProps = {
-  exchangeType: ExchangeType
-  output: number | undefined
-  setOutput: Dispatch<SetStateAction<number | undefined>>
-  setInput: Dispatch<SetStateAction<number>>
-  purchasePrice: number | undefined
-  salePrice: number | undefined
-}
+export function OutputExchangeInput() {
+  const { exchangeType, output } = useSelector((state: RootState) => state.exchange)
+  const { purchasePrice, salePrice } = useSelector((state: RootState) => state.rates)
 
-export function OutputExchangeInput(props: OutputExchangeInputProps) {
-  const { exchangeType, output, setOutput, setInput, purchasePrice, salePrice } = props
+  const dispatch = useDispatch<AppDispatch>()
 
   const currencyText = exchangeType === ExchangeType.PURCHASE ? 'Soles' : 'Dólares'
   const currencySymbol = exchangeType === ExchangeType.PURCHASE ? 'S/' : '$'
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const value = Number(event.target.value)
+    const newOutput = Number(event.target.value)
 
-    setOutput(value)
+    dispatch(setOutput(newOutput))
 
-    if (!output || !purchasePrice || !salePrice) return
+    if (!purchasePrice || !salePrice) return
 
     if (exchangeType === ExchangeType.PURCHASE) {
       const input = fromDollarsToSoles({
-        amount: output,
+        amount: {
+          type: 'output',
+          value: newOutput,
+        },
         purchasePrice,
       })
 
-      setInput(input)
+      dispatch(setInput(input))
     } else {
       const input = fromSolesToDollars({
-        amount: output,
+        amount: {
+          type: 'output',
+          value: newOutput,
+        },
         salePrice,
       })
 
-      setInput(input)
+      dispatch(setInput(input))
     }
   }
 
@@ -47,7 +49,7 @@ export function OutputExchangeInput(props: OutputExchangeInputProps) {
       value={output ?? 0}
       onChange={handleChange}
       currencyText={currencyText}
-      operationText='Envías'
+      operationText='Recibes'
       currencySymbol={currencySymbol}
     />
   )
