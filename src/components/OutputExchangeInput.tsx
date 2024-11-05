@@ -1,17 +1,19 @@
 import { ExchangeType } from '@/enums'
 import { ExchangeInput } from './ExchangeInput'
 import { Dispatch, SetStateAction } from 'react'
-import { calculateSolesExchange, calculateDollarExchange } from '@/services/calculateExchange'
+import { fromDollarsToSoles, fromSolesToDollars } from '@/services/calculateExchange'
 
 type OutputExchangeInputProps = {
   exchangeType: ExchangeType
   output: number | undefined
   setOutput: Dispatch<SetStateAction<number | undefined>>
   setInput: Dispatch<SetStateAction<number>>
+  purchasePrice: number | undefined
+  salePrice: number | undefined
 }
 
 export function OutputExchangeInput(props: OutputExchangeInputProps) {
-  const { exchangeType, output, setOutput, setInput } = props
+  const { exchangeType, output, setOutput, setInput, purchasePrice, salePrice } = props
 
   const currencyText = exchangeType === ExchangeType.PURCHASE ? 'Soles' : 'Dólares'
   const currencySymbol = exchangeType === ExchangeType.PURCHASE ? 'S/' : '$'
@@ -21,19 +23,19 @@ export function OutputExchangeInput(props: OutputExchangeInputProps) {
 
     setOutput(value)
 
-    if (!output) return
+    if (!output || !purchasePrice || !salePrice) return
 
     if (exchangeType === ExchangeType.PURCHASE) {
-      const input = calculateSolesExchange({
+      const input = fromDollarsToSoles({
         amount: output,
-        purchasePrice: 3.924,
+        purchasePrice,
       })
 
       setInput(input)
     } else {
-      const input = calculateDollarExchange({
+      const input = fromSolesToDollars({
         amount: output,
-        salePrice: 3.945,
+        salePrice,
       })
 
       setInput(input)

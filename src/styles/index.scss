@@ -207,6 +207,10 @@ body {
     padding: 1rem 0.5rem;
     border-radius: $radius_sm;
     font-size: 1.1rem;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
   }
 
   &__change-type {
