@@ -1,3 +1,5 @@
+import './ExchangeInput.scss'
+
 export type ExchangeInputProps = {
   currencyText: string
   currencySymbol: string
@@ -11,7 +13,7 @@ export function ExchangeInput(props: ExchangeInputProps) {
     <label className='hero-app__label'>
       <span className='hero-app__label-currency'>{currencyText}</span>
       <span className='hero-app__currency-symbol'>{currencySymbol}</span>
-      <input type='number' className='hero-app__input' value={value} onChange={onChange} />
+      <input type='number' className='hero-app__input' value={value} onChange={onChange} min={0} />
       <span className='hero-app__label-operation'>{operationText}</span>
     </label>
   )

@@ -1,0 +1,23 @@
+.hero-text {
+  color: white;
+  text-align: center;
+
+  @media screen and (min-width: $desktop) {
+    text-align: start;
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 1.5rem;
+
+    @media screen and (min-width: $desktop) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &__description {
+    @media screen and (min-width: $desktop) {
+      font-size: 1.3rem;
+    }
+  }
+}

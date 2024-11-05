@@ -1,0 +1,85 @@
+.hero-app {
+  background-color: white;
+  width: 100%;
+
+  @media screen and (min-width: $desktop) {
+    border-radius: 8px;
+    width: fit-content;
+  }
+
+  &__tabs {
+    display: flex;
+    border-bottom: 1px solid $light;
+  }
+
+  &__tab {
+    padding-inline: 1rem;
+    padding-top: 1.5rem;
+    flex-grow: 1;
+    color: $gray;
+  }
+
+  &__tab-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    margin-inline: auto;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 0.2rem;
+
+    &.selected {
+      color: $primary;
+      border-bottom-color: $primary;
+    }
+  }
+
+  &__tab-content-number {
+    font-weight: 500;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2.5rem;
+    padding: 2rem 2.5rem;
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    row-gap: 1rem;
+  }
+
+  &__submit {
+    background-color: $primary;
+    color: white;
+    padding: 1rem 0.5rem;
+    border-radius: $radius_sm;
+    font-size: 1.1rem;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__change-type {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: $primary;
+    color: white;
+    padding: 0.4rem;
+    border-radius: 100%;
+    font-size: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      opacity: 0.95;
+    }
+  }
+}
