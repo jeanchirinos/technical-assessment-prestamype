@@ -4,7 +4,10 @@ export function fromDollarsToSoles(args: {
     value: number
   }
   purchasePrice: number
-}): number {
+}): {
+  amount: number
+  text: string
+} {
   const { amount, purchasePrice } = args
 
   let result = 0
@@ -15,7 +18,10 @@ export function fromDollarsToSoles(args: {
     result = amount.value / purchasePrice
   }
 
-  return Number(result.toFixed(2))
+  return {
+    amount: result,
+    text: result.toFixed(2),
+  }
 }
 
 export function fromSolesToDollars(args: {
@@ -24,7 +30,10 @@ export function fromSolesToDollars(args: {
     value: number
   }
   salePrice: number
-}): number {
+}): {
+  amount: number
+  text: string
+} {
   const { amount, salePrice } = args
 
   let result = 0
@@ -35,5 +44,8 @@ export function fromSolesToDollars(args: {
     result = amount.value * salePrice
   }
 
-  return Number(result.toFixed(2))
+  return {
+    amount: result,
+    text: result.toFixed(2),
+  }
 }

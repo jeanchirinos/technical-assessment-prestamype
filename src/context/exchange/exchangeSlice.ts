@@ -1,15 +1,24 @@
+import { DEFAULT_INPUT_EXCHANGE_DATA } from '@/constants/values'
 import { ExchangeType } from '@/enums'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
+type InputData = {
+  amount: number
+  text: string
+}
+
 type ExchangeState = {
   exchangeType: ExchangeType
-  input: number
-  output: number | undefined
+  input: InputData
+  output: InputData | undefined
 }
 
 const initialState: ExchangeState = {
   exchangeType: ExchangeType.PURCHASE,
-  input: 1000,
+  input: {
+    amount: DEFAULT_INPUT_EXCHANGE_DATA.amount,
+    text: DEFAULT_INPUT_EXCHANGE_DATA.text,
+  },
   output: undefined,
 }
 
@@ -27,10 +36,16 @@ const exchangeSlice = createSlice({
       state.exchangeType = newExchangeType
     },
     setInput: (state, action: PayloadAction<number>) => {
-      state.input = action.payload
+      state.input = {
+        amount: action.payload,
+        text: action.payload.toFixed(2),
+      }
     },
     setOutput: (state, action: PayloadAction<number>) => {
-      state.output = action.payload
+      state.output = {
+        amount: action.payload,
+        text: action.payload.toFixed(2),
+      }
     },
   },
 })

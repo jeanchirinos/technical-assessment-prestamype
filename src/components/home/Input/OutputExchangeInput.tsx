@@ -30,7 +30,7 @@ export function OutputExchangeInput() {
         purchasePrice,
       })
 
-      dispatch(setInput(input))
+      dispatch(setInput(input.amount))
     } else {
       const input = fromSolesToDollars({
         amount: {
@@ -40,13 +40,13 @@ export function OutputExchangeInput() {
         salePrice,
       })
 
-      dispatch(setInput(input))
+      dispatch(setInput(input.amount))
     }
   }
 
   return (
     <ExchangeInput
-      value={output ?? 0}
+      value={output?.text ?? 0}
       onChange={handleChange}
       currencyText={currencyText}
       operationText='Recibes'

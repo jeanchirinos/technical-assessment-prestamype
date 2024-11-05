@@ -27,6 +27,7 @@ export function HeroApp() {
           onClick={() => dispatch(setExchangeType(ExchangeType.PURCHASE))}
         >
           <div
+            data-testid='dollar-purchase-tab-content'
             className={`hero-app__tab-content ${
               exchangeType === ExchangeType.PURCHASE ? 'selected' : ''
             }`}
@@ -42,6 +43,7 @@ export function HeroApp() {
           onClick={() => dispatch(setExchangeType(ExchangeType.SELL))}
         >
           <div
+            data-testid='dollar-sell-tab-content'
             className={`hero-app__tab-content ${
               exchangeType === ExchangeType.SELL ? 'selected' : ''
             }`}
@@ -70,7 +72,7 @@ export function HeroApp() {
               </button>
             </div>
 
-            <button type='button' className='hero-app__submit' disabled={!ratesIsLoading}>
+            <button type='button' className='hero-app__submit' disabled={ratesIsLoading}>
               Iniciar operación
             </button>
           </>

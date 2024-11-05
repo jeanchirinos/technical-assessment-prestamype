@@ -17,6 +17,7 @@ export function InputExchangeInput() {
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const newInput = Number(event.target.value)
+
     dispatch(setInput(newInput))
 
     calculateOutput({ newInput })
@@ -24,7 +25,7 @@ export function InputExchangeInput() {
 
   return (
     <ExchangeInput
-      value={input}
+      value={input.text}
       onChange={handleChange}
       currencyText={currencyText}
       operationText='Envías'

@@ -1,3 +1,4 @@
+import { DEFAULT_INPUT_EXCHANGE_DATA } from '@/constants/values'
 import { setOutput } from '@/context/exchange/exchangeSlice'
 import { AppDispatch, RootState } from '@/context/store'
 import { ExchangeType } from '@/enums'
@@ -5,12 +6,12 @@ import { fromDollarsToSoles, fromSolesToDollars } from '@/services/calculateExch
 import { useDispatch, useSelector } from 'react-redux'
 
 export function useInputExchange() {
-  const { exchangeType, input } = useSelector((state: RootState) => state.exchange)
+  const { exchangeType } = useSelector((state: RootState) => state.exchange)
   const { purchasePrice, salePrice } = useSelector((state: RootState) => state.rates)
   const dispatch = useDispatch<AppDispatch>()
 
   function calculateOutput(args?: { newInput?: number }) {
-    const { newInput = input } = args ?? {}
+    const { newInput = DEFAULT_INPUT_EXCHANGE_DATA.amount } = args ?? {}
 
     if (!purchasePrice || !salePrice) return
 
@@ -23,7 +24,7 @@ export function useInputExchange() {
         purchasePrice,
       })
 
-      dispatch(setOutput(newOutput))
+      dispatch(setOutput(newOutput.amount))
     } else {
       const newOutput = fromSolesToDollars({
         amount: {
@@ -33,7 +34,7 @@ export function useInputExchange() {
         salePrice,
       })
 
-      dispatch(setOutput(newOutput))
+      dispatch(setOutput(newOutput.amount))
     }
   }
 
