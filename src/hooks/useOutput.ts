@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { useInputExchange } from './useInputExchange'
 
 export function useOutput() {
-  const { exchangeType, output } = useSelector((state: RootState) => state.exchange)
+  const { exchangeType, input, output } = useSelector((state: RootState) => state.exchange)
   const { purchasePrice, salePrice } = useSelector((state: RootState) => state.rates)
 
   const { calculateOutput } = useInputExchange()
@@ -16,7 +16,7 @@ export function useOutput() {
   }, [calculateOutput, output])
 
   useEffect(() => {
-    calculateOutput()
+    calculateOutput({ newInput: input.amount })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exchangeType, purchasePrice, salePrice])
